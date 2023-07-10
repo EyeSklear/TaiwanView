@@ -33,7 +33,6 @@ export function decrypt(ciphertext: string, userId: string) {
         })
         result += String.fromCharCode(16 * b + a - userId.charCodeAt(i / 2))
     }
-    return result
-    
+    return result 
 }
 

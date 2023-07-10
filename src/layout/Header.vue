@@ -14,7 +14,7 @@
         <div class="grid-content data" @click="nav('dataList')">资源门户</div>
       </el-col>
       <el-col :span="2">
-        <div class="grid-content amap" @click="nav('mapview')">一张图</div>
+        <div class="grid-content amap" @click="nav('scenario')">一张图</div>
       </el-col>
       <el-col :span="2">
         <div class="grid-content analysis" @click="nav('analyse')">
@@ -27,15 +27,17 @@
       <el-col :span="2" :offset="7">
         <el-dropdown trigger="hover" @command="userNav">
           <el-button
-              type="primary"
-              color="rgba(219, 219, 219, 0.5)"
-              :dark="false"
+            type="primary"
+            color="rgba(219, 219, 219, 0.5)"
+            :dark="false"
           >
             <el-avatar
-                :size="32"
-                src=
-                    'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'
-
+              :size="32"
+              :src="
+                avatarUrl === ''
+                  ? 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'
+                  : prefix + 'visual/getAvatar/' + avatarUrl
+              "
             />
             &nbsp;&nbsp;&nbsp;账号
           </el-button>
@@ -47,7 +49,7 @@
               </el-dropdown-item
               >
 
-              <el-dropdown-item command="3">上传记录</el-dropdown-item>
+          
 
               <el-dropdown-item command="5">退出</el-dropdown-item>
             </el-dropdown-menu>
@@ -68,11 +70,12 @@ export default {
 import {computed,  ref} from "vue";
 import router from "@/router";
 // import { useStore } from "@/store";
-// import { getToken } from "@/utils/auth";
+import { getToken } from "@/utils/auth";
+import { useUserInfo } from "@/stores/userInfo"
 
 // const emit = defineEmits(["openUploadList"]);
 //const store = useStore();
-
+const userInfoStore = useUserInfo();
 const path = ref("/user/space");
 // const login = computed(() => {
 //   if (getToken() === null) {
@@ -82,57 +85,54 @@ const path = ref("/user/space");
 //   }
 // });
 
-const avatarUrl = ''
-// const avatarUrl = computed(() => {
-//   return store.state.user.avatar;
-// });
-// const adminFlag = computed(() => {
-//   if (store.state.user.role === "admin") {
-//     return true;
-//   } else {
-//     return false;
-//   }
-// });
+const avatarUrl = computed(() => {
+  return userInfoStore.userInfos.avatar;
+});
+const adminFlag = computed(() => {
+  if (userInfoStore.userInfos.role === "admin") {
+    return true;
+  } else {
+    return false;
+  }
+});
 // const dotFlag = computed(() => {
 //   return store.state.other.uploadDotFlag;
 // });
 
 const nav = (param: string) => {
   if (param === "home") {
-    router.push({path: "/"});
+    router.push({name: 'Home'});
   } else if (param === "dataList") {
-    router.push({path: "/data/list"});
-  } else if (param === "mapview") {
-    router.push("/mapview");
+    console.log(router.currentRoute)
+    router.push({name: 'DataList'});
+  } else if (param === "scenario") {
+    router.push("/scenario");
   } else if (param === "analyse") {
     router.push({path: "/analyse"});
   }
 };
 
-// const userNav = (param: string) => {
-//   if (param === "1") {
-//     router.push({ path: "/user/space" });
-//   } else if (param === "2") {
-//     router.push({ path: "/user/admin" });
-//   } else if (param === "5") {
-//     store.dispatch("logout", undefined);
-//   } else if (param === "3") {
-//     store.commit("SET_UPLOAD_DOT_FLAG", false);
-//     emit("openUploadList");
-//   }
-// };
+const userNav = (param: string) => {
+  if (param === "1") {
+    router.push({ path: "/user/space" });
+  } else if (param === "2") {
+    router.push({ path: "/user/admin" });
+  } else if (param === "5") {
+    userInfoStore.logout()
+  } 
+};
 
-// const ports = computed(() => {
-//   const tempPorts = [
-//     { href: "#/data", text: "资源门户" },
-//     { href: "#/scenario", text: "一张图" },
-//     { href: "#/analyze", text: "分析中心" },
-//   ];
-//   if (getToken() === null) {
-//     tempPorts.push({ href: "#/login", text: "登录" });
-//   }
-//   return tempPorts;
-// });
+const ports = computed(() => {
+  const tempPorts = [
+    { href: "#/data", text: "资源门户" },
+    { href: "#/scenario", text: "一张图" },
+    { href: "#/analyze", text: "分析中心" },
+  ];
+  if (getToken() === null) {
+    tempPorts.push({ href: "#/login", text: "登录" });
+  }
+  return tempPorts;
+});
 
 const toHome = () => {
   router.push({path: "/"});

@@ -22,3 +22,13 @@ export async function login(jsonData: LoginJsonData) {
 //   export async function getUserByEmail() {
 //     return await get(`/user/getUserByEmail`);
 //   }
+//========================File相关接口=================================
+export async function uploadFile(formData:FormData){
+  return await post(`/file/uploadFile`, formData)
+}
+
+
+//========================Folder相关接口=================================
+export async function addFolder(formData:FormData){
+  return await post(`/folder/addFolder`, formData)
+}

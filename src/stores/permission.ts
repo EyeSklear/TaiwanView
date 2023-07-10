@@ -23,10 +23,13 @@ state :  ():permissionState=>({
 actions :{
     set_routers( routers: RouteRecordRaw[]) {
         this.permission.addRouts = routers
+        console.log("初始静态路由",this.permission.routs)
         this.permission.routs = constantRoutes.concat(routers)
+        console.log("这里是总路由1",this.permission.routs)
     },
     generateRoutes(role: string){
         const result = filterAsyncRoutes(asyncRouters, role);
+        console.log("这里是总路由",result)
         this.set_routers(result)
     },
     clearRouters(){

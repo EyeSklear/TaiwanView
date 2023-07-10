@@ -17,9 +17,9 @@ export const constantRoutes: Array<RouteRecordRaw> = [
             {
                 path: '',
                 name: 'Home',
-                component:() => import('@/views/Home.vue'),
+                component:() => import('@/views/home/Index.vue'),
                 meta: {
-                    keepAlive: false,
+                    keepAlive: true,
                     title: '首页'
                 }
 
@@ -95,6 +95,20 @@ export const constantRoutes: Array<RouteRecordRaw> = [
 
 ]
 
+const router = createRouter({
+    history: createWebHashHistory(),
+    routes: constantRoutes,
+    scrollBehavior(to, from, savedPosition) {
+        if (savedPosition) {
+            return savedPosition
+        } else {
+            return {
+                top: 0
+            }
+        }
+    }
+})
+
 export const asyncRouters: Array<RouteRecordRaw> = [
     // {
     //     path: "/data",
@@ -127,7 +141,7 @@ export const asyncRouters: Array<RouteRecordRaw> = [
     {
         path: "/data",
         name: 'Data',
-        component: Layout,
+        component: shallowRef(Layout),
         redirect: '/data/list',
         children: [
             {
@@ -136,7 +150,7 @@ export const asyncRouters: Array<RouteRecordRaw> = [
                 component: () => import('@/components/DataList.vue'),
                 meta: {
                     role:["member","admin"],
-                    keepAlive: false,
+                    keepAlive: true,
                     title: '资源门户',
                     key: "DataList",
                 }
@@ -149,11 +163,88 @@ export const asyncRouters: Array<RouteRecordRaw> = [
         component: () => import('@/components/Mapview.vue'),
              meta: {
                 role:["member","admin"],
-                keepAlive: false,
+                keepAlive: true,
                 title: '全景台湾一张图',
                 key: "MapView",
              }
     },
+    {
+        path: '/hainan',
+        name: "HaiNan",
+        component: () => import('@/components/war/HaiNanWar.vue'),
+             meta: {
+                role:["member","admin"],
+                keepAlive: true,
+                title: '海南岛战争',
+                key: "HaiNanWar",
+             }
+    },
+    {
+        path: "/scenario",
+        name: "Scenario",
+        component: shallowRef(Layout),
+        children: [
+          {
+            path: "",
+            redirect: "/scenario/list",
+          },
+          {
+            path: "list",
+            name: "ScenarioList",
+            component: () => import("@/views/scenario/Index.vue"),
+            meta: {
+              role: ["member", "admin"],
+              title: "一张图",
+              keepAlive: true,
+              
+            },
+          },
+        ],
+      },
+    {
+        path: "/analyse",
+        name: "Analyse",
+        component: shallowRef(Layout),
+        children: [
+          {
+            path: "",
+            redirect: "/analyse/list",
+          },
+          {
+            path: "list",
+            name: "AnalyseList",
+            component: () => import("@/views/analyse/Index.vue"),
+            meta: {
+              role: ["member", "admin"],
+              title: "分析中心",
+              keepAlive: true,
+              key: "AnalyseList",
+            },
+          },
+        ],
+      },
+      {
+        path: "/user",
+        name: "User",
+        component: shallowRef(Layout),
+        children: [
+          {
+            path: "",
+            name: 'UserChild',
+            redirect: "/user/space",
+          },
+          {
+            path: "space",
+            name: "UserSpace",
+            component: () => import("@/views/user/Index.vue"),
+            meta: {
+              role: ["member", "admin"],
+              title: "个人空间",
+              keepAlive: true,
+            },
+          },
+        ],
+      },
     {
         path: "/:catchAll(.*)",
         name: 'Redirect404',
@@ -190,19 +281,7 @@ export const asyncRouters: Array<RouteRecordRaw> = [
 // },
 // ]
 
-const router = createRouter({
-    history: createWebHistory(),
-    routes: constantRoutes,
-    scrollBehavior(to, from, savedPosition) {
-        if (savedPosition) {
-            return savedPosition
-        } else {
-            return {
-                top: 0
-            }
-        }
-    }
-})
+
 
 // if (to.path !== '/Home' && to.path !== '/') {
 //   const store = useStore()

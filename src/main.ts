@@ -17,6 +17,8 @@ import './assets/css/global.css'
 //自定义钩子
 import {move} from '@/directives/drag'
 
+import * as turf from "@turf/turf";
+
 const app = createApp(App);
 app.directive("move", move)
 app.use(videoPlay).use(pinia).use(vue3videoPlay).use(router).use(ElementPlus, {locale: zhCn}).mount('#app')

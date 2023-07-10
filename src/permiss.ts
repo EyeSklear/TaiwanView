@@ -1,7 +1,7 @@
 import router from "@/router/index";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
-import { RouteLocationNormalized } from "vue-router";
+import { RouteLocationNormalized, RouteRecordRaw } from "vue-router";
 import { useUserInfo } from "@/stores/userInfo"
 import { usePermission } from "@/stores/permission"
 import { getToken } from "@/utils/auth";
@@ -9,9 +9,8 @@ import { storeToRefs } from 'pinia';
 // import { toIdPages } from "@/utils/routerUtil";
 
 
-const whiteList = ['/login', '/register']
-let userInfoStore :any =null;
-let permissionStore :any= null;
+let userInfoStore: any = null;
+let permissionStore: any = null;
 
 // const userInfoStore = useUserInfo();
 // const permissionStore = usePermission();
@@ -21,6 +20,7 @@ router.beforeEach(
     async (to, from, next) => {
         const userInfoStore = useUserInfo();
         const permissionStore = usePermission();
+        console.log("items", router.options.routes)
         NProgress.start();
         // if (userInfoStore === null) {
         //     userInfoStore = useUserInfo()
@@ -28,13 +28,12 @@ router.beforeEach(
         //   if (permissionStore === null) {
         //     permissionStore = usePermission()
         //   } 
-        
+
         //如果用户曾经登陆过，或者已经登陆过（拥有token）
         if (getToken() != null) {
-            if (whiteList.includes(to.path)) {
+            if (to.path === "/login" || to.path === "/register") {
                 window.document.title = "首页";
                 next({ path: "/" });
-                // console.log("wokaka")
                 NProgress.done();
             }
             else {
@@ -46,13 +45,10 @@ router.beforeEach(
                         await userInfoStore.getUserInfo()
                         const role = userInfoStore.userInfos.role
                         permissionStore.generateRoutes(role)
-                         const {permission}= storeToRefs(permissionStore);
-                        // console.log("permissionStore",permission.value)
-                        permissionStore.permission.addRouts.forEach((item) => {
+                        const { permission } = storeToRefs(permissionStore);
+                        permissionStore.permission.addRouts.forEach((item as RouteRecordRaw) => {
                             router.addRoute(item);
-                            // console.log("item",item)
                         })
-                        // console.log("WOWOW",router)
                         window.document.title = to.meta.title as string;
                         next({ ...to, replace: true });
                         NProgress.done();
@@ -65,11 +61,12 @@ router.beforeEach(
 
                 }
                 else {
-                    console.log("gagag")
+                    console.log(userInfoStore)
                     // const code = await toIdPages(to);
                     // if (code === 1) {
                     //   window.document.title = to.meta.title as string;
-                       next();
+                    window.document.title = to.meta.title as string;
+                    next();
                     // } else if (code === -1) {
                     //   window.document.title = "404";
                     //   next("/404");
@@ -77,12 +74,13 @@ router.beforeEach(
                     //   window.document.title = to.meta.title as string;
                     //   next();
                     // }
-                     NProgress.done();
+                    NProgress.done();
                 }
             }
         } else {
-            if (whiteList.includes(to.path) || to.path === "/") {
+            if (to.path === "/login" || to.path === "/register" || to.path === "/") {
                 window.document.title = to.meta.title as string;
+
                 next();
                 NProgress.done();
             } else {

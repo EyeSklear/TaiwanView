@@ -1,11 +1,11 @@
+<style>
+
+</style>
+
 <template>
-  <h1>Page One</h1>
-  <button @click="handleClick">Home</button>
+    <div>data界面</div>
 </template>
 
-<script lang="ts" setup>
-import {useRouter} from 'vue-router';
+<script setup lang="ts">
 
-const router = useRouter()
-const handleClick = () => router.push({path: '/Home'})
 </script>

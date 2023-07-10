@@ -142,8 +142,8 @@ const getImageUrl = (name:any) => {
         return new URL('@/assets/3.png', import.meta.url).href
     }
 onMounted(() => {
-    console.log("haha")
-    console.log(router.currentRoute)
+    // console.log("haha")
+    //console.log(router.currentRoute)
 })
 
 

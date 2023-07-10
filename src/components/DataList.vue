@@ -9,9 +9,15 @@ margin: 0;
 .container {
   width: 100%;
   height: 250vh;
-  overflow-x: hidden;
-  overflow-y:hidden;
+overflow: hidden;
   position: relative;
+  .head-intro{
+    width: 100%;
+    height:93vh;
+    background: url("/resource/city.png");
+        background-size: cover;
+
+  }
   .left {
     //flex: 1;
     position: absolute;
@@ -23,10 +29,11 @@ margin: 0;
     .left-tree {
       position: fixed;
       left: 5%;
-top:10vh;
+top:0vh;
       width: 15%;
       height: 50vh;
       background-color: brown;
+    display: none;
 
     }
   }
@@ -84,8 +91,9 @@ top:10vh;
     <DataCard></DataCard>
   </div> -->
   <div class="container">
+    <div class="head-intro"></div>
     <div class="left">
-      <div class="left-tree">
+      <div class="left-tree" id="left-tree">
       
       </div>
     </div>
@@ -111,7 +119,7 @@ top:10vh;
       </div>
 
     </div>
-    <div class="right">
+    <div class="right" id="right">
       <div class="hot">
 
       </div>
@@ -133,11 +141,27 @@ const router = useRouter()
 const handleClick = () => {
   router.push({ path: '/Home' })
 }
+
 onBeforeMount(() => {
-  console.log("hahahaddasd")
+ 
 })
 onMounted(() => {
-  //console.log('ipt2:', ipt)
+  window.addEventListener('scroll', function() {
+  const scrollTop =  document.documentElement.scrollTop;
+  const threshold = window.innerHeight; // 设置阈值，比如屏幕高度的一半
+  const stickyBox1 = document.getElementById('left-tree');
+  const stickyBox2 = document.getElementById('right');
+  console.log(threshold)
+  
+  if (scrollTop >= 0.88*threshold) {
+    stickyBox1!.style.display = 'block'; // 显示sticky定位的box
+    stickyBox2!.style.display = 'block';
+  } else {
+    stickyBox1!.style.display = 'none'; // 隐藏sticky定位的box
+    stickyBox2!.style.display = 'none'; 
+  }
+});
+  console.log('ipt2:')
 })
 </script>
 
